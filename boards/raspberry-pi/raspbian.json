@@ -68,7 +68,7 @@
         "sudo touch runzoom.sh",
         "sudo chmod 775 runzoom.sh",
         "echo '#!/bin/bash\ncd /home/pi/zoom\n./zoom' > /home/pi/zoom/runzoom.sh",
-        "echo '[Desktop Entry]\nName=Zoom\nExec=lxternimal --title \"Cierra esta ventana para cerrar Zoom\" -e /home/pi/zoom/runzoom.sh\nPath=${HOME}/zoom\nType=Application\nCategories=Network;'> /home/pi/.local/share/applications/zoom.desktop"
+        "echo '[Desktop Entry]\nName=Zoom\nExec=lxterminal --title \"Cierra esta ventana para cerrar Zoom\" -e /home/pi/zoom/runzoom.sh\nPath=${HOME}/zoom\nType=Application\nCategories=Network;'> /home/pi/.local/share/applications/zoom.desktop"
       ]
     }
   ]
