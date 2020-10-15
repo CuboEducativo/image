@@ -1,42 +1,74 @@
 {
   "variables": {},
-  "builders": [{
-    "type": "arm",
-    "file_urls" : ["https://downloads.raspberrypi.org/raspbian/images/raspbian-2019-09-30/2019-09-26-raspbian-buster.zip"],
-    "file_checksum_url": "https://downloads.raspberrypi.org/raspbian/images/raspbian-2019-09-30/2019-09-26-raspbian-buster.zip.sha256",
-    "file_checksum_type": "sha256",
-    "file_target_extension": "zip",
-    "image_build_method": "reuse",
-    "image_path": "raspberry-pi.img",
-    "image_size": "2G",
-    "image_type": "dos",
-    "image_partitions": [
-      {
-        "name": "boot",
-        "type": "c",
-        "start_sector": "8192",
-        "filesystem": "vfat",
-        "size": "256M",
-        "mountpoint": "/boot"
-      },
-      {
-        "name": "root",
-        "type": "83",
-        "start_sector": "532480",
-        "filesystem": "ext4",
-        "size": "0",
-        "mountpoint": "/"
-      }
-    ],
-    "image_chroot_env": ["PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"],
-    "qemu_binary_source_path": "/usr/bin/qemu-arm-static",
-    "qemu_binary_destination_path": "/usr/bin/qemu-arm-static"
-  }],
+  "builders": [
+    {
+      "type": "arm",
+      "file_urls": [
+        "https://downloads.raspberrypi.org/raspbian/images/raspbian-2020-02-14/2020-02-13-raspbian-buster.zip"
+      ],
+      "file_checksum_url": "https://downloads.raspberrypi.org/raspbian/images/raspbian-2020-02-14/2020-02-13-raspbian-buster.zip.sha256",
+      "file_checksum_type": "sha256",
+      "file_target_extension": "zip",
+      "image_build_method": "reuse",
+      "image_path": "raspberry-pi.img",
+      "image_size": "2G",
+      "image_type": "dos",
+      "image_partitions": [
+        {
+          "name": "boot",
+          "type": "c",
+          "start_sector": "8192",
+          "filesystem": "vfat",
+          "size": "256M",
+          "mountpoint": "/boot"
+        },
+        {
+          "name": "root",
+          "type": "83",
+          "start_sector": "532480",
+          "filesystem": "ext4",
+          "size": "0",
+          "mountpoint": "/"
+        }
+      ],
+      "image_chroot_env": ["PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"],
+      "qemu_binary_source_path": "/usr/bin/qemu-arm-static",
+      "qemu_binary_destination_path": "/usr/bin/qemu-arm-static"
+    }
+  ],
   "provisioners": [
     {
       "type": "shell",
+      "inline": ["touch /tmp/test"]
+    },
+    {
+      "type": "shell",
+      "inline": ["apt-get install -y pulseaudio cmake libxcb-xtest0"]
+    },
+    {
+      "type": "shell",
       "inline": [
-        "touch /tmp/test"
+        "cd /tmp",        
+        "git clone https://github.com/ptitSeb/box86",
+        "cd box86",
+        "mkdir build; cd build; cmake .. -DRPI4=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo",
+        "make -j24",
+        "sudo make install",
+        "sudo systemctl restart systemd-binfmt"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "cd /home/pi",        
+        "wget https://zoom.us/client/latest/zoom_i686.tar.xz",
+        "tar -xf zoom_i686.tar.xz",
+        "rm zoom_i686.tar.xz",
+        "cd zoom",
+        "sudo touch runzoom.sh",
+        "sudo chmod 775 runzoom.sh",
+        "echo '#!/bin/bash\ncd /home/pi/zoom\n./zoom' > /home/pi/zoom/runzoom.sh",
+        "echo '[Desktop Entry]\nName=Zoom\nExec=lxternimal --title \"Cierra esta ventana para cerrar Zoom\" -e /home/pi/zoom/runzoom.sh\nPath=${HOME}/zoom\nType=Application\nCategories=Network;'> /home/pi/.local/share/applications/zoom.desktop"
       ]
     }
   ]
