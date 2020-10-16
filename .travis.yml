@@ -6,10 +6,11 @@ install:
 script:
   - docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build boards/raspberry-pi/raspbian.json
 
+before_deploy:
+  - echo ALL G
+
 deploy:
-  # The following block is responsible to upload the zip files
   - provider: releases
-    skip-cleanup: true
     api_key: $GITHUB_TOKEN
     file:
       - "raspberry-pi.img"
