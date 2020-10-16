@@ -11,6 +11,7 @@ before_deploy:
 
 deploy:
   - provider: releases
+    skip-cleanup: true
     api_key: $GITHUB_TOKEN
     file:
       - "raspberry-pi.img"
