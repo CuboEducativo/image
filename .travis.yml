@@ -1,16 +1,21 @@
-matrix:
-  include:
-    - language: go
-      go:
-        - master
-    - language: minimal
-      services:
-        - docker
-      script:
-        - set -o errexit;
-          docker run --rm -i hadolint/hadolint < docker/Dockerfile;
-          docker run --rm -v "$PWD:/mnt" koalaman/shellcheck:stable --enable=all docker/entrypoint.sh;
-          docker build -t packer-builder-arm -f docker/Dockerfile .;
-          docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build packer-builder-arm build boards/raspberry-pi/archlinuxarm.json -extra-system-packages=bmap-tools,zstd;
-          du -h raspberry-pi.img;
-          du -h --apparent-size raspberry-pi.img
+services:
+  - docker
+
+install:
+  - docker pull mkaczanowski/packer-builder-arm
+script:
+  - docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build boards/raspberry-pi/raspbian.json
+
+deploy:
+  # The following block is responsible to upload the zip files
+  - provider: releases
+    skip-cleanup: true
+    api_key: $GITHUB_TOKEN
+    file:
+      - "raspberry-pi.img"
+
+    on:
+      # Create GitHub Releases for new git tags
+      # regardless of the branch.
+      all_branches: true
+      tags: true
