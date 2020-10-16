@@ -16,7 +16,6 @@ Note: this assumes you already have docker installed locally.
 git clone https://github.com/CuboEducativo/image
 cd image
 docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build raspbian.json
-
 ```
 
 # What's inside
