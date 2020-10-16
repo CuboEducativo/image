@@ -8,6 +8,9 @@ jobs:
     name: Build CuboEductivo image
     runs-on: ubuntu-latest
     steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
       - name: Build image
         run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build boards/raspberry-pi/raspbian.json
 
