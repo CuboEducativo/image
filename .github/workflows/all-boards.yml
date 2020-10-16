@@ -56,6 +56,14 @@ jobs:
       - name: Build image
         run: sudo ./packer build boards/raspberry-pi/raspbian.json
 
+      - name: ls
+        run: ls
+
+      - name: Move to folder
+        run: |
+          mkdir output
+          mv raspberry-pi.img output/
+
       - uses: shallwefootball/s3-upload-action@master
         name: Upload S3
         id: S3
@@ -63,4 +71,4 @@ jobs:
           aws_key_id: ${{ secrets.AWS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: "raspberry-pi.img"
+          source_dir: "output"
