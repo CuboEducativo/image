@@ -73,12 +73,12 @@ jobs:
           df -h
 
       - name: Build image
-        run: sudo ./packer build boards/${{ matrix.boards }}
+        run: sudo ./packer build boards/raspberry-pi/raspbian.json
 
       - name: Deploy image
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          repo_token: "${{ secrets.DEPLOY_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
