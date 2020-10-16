@@ -81,5 +81,4 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
-          files:
-            - raspberry-pi.img
+          files: raspberry-pi.img
