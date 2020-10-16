@@ -74,6 +74,7 @@ jobs:
 
       - name: Build image
         run: sudo ./packer build boards/${{ matrix.boards }}
+
       - name: Deploy image
         uses: marvinpinto/action-automatic-releases@latest
         with:
