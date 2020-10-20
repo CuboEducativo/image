@@ -4,7 +4,7 @@ services:
 install:
   - docker pull mkaczanowski/packer-builder-arm
 script:
-  - docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build boards/raspberry-pi/raspbian.json
+  - docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build raspbian.json
 
 before_deploy:
   - echo ALL G
